@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "629489143307",
+    "project_id": "splitcommute",
+    "storage_bucket": "splitcommute.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:629489143307:android:bf2ba73630c8b217a0010e",
+        "android_client_info": {
+          "package_name": "com.mobile.split_commute"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDF7_VPCqIwFvDC0EURl54ZX64Ma3Bw6m0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

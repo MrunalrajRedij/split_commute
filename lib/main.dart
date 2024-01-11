@@ -1,6 +1,18 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:split_commute/Screens/loginScreen.dart';
+import 'package:split_commute/config/routes.dart';
+import 'package:split_commute/firebase_options.dart';
+import 'package:split_commute/screens/homeScreen.dart';
+import 'package:split_commute/config/palette.dart' as palette;
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(const MyApp());
 }
 
@@ -10,60 +22,58 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+    return ScreenUtilInit(
+      designSize: const Size(360, 690),
+      minTextAdapt: true,
+      splitScreenMode: true,
+      builder: (BuildContext context, Widget? child) {
+        return MaterialApp(
+          theme: ThemeData(
+            primarySwatch: const MaterialColor(
+              palette.primaryColorInt,
+              palette.persianColorMap,
+            ),
+            colorScheme: ColorScheme.fromSeed(seedColor: palette.primaryColor),
+            useMaterial3: true,
+          ),
+          home: const MyHomePage(),
+          routes: getRoutes(),
+        );
+      },
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-  final String title;
+  const MyHomePage({super.key});
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+  late User? _user;
+  bool isLoading = true;
 
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
+  @override
+  void initState() {
+    super.initState();
+    //get user from firebase auth for further validation
+    final FirebaseAuth auth = FirebaseAuth.instance;
+    _user = auth.currentUser;
+    isLoading = false;
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
+    return isLoading
+        ? const Scaffold(
+            body: Center(
+              child: CircularProgressIndicator(),
             ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ),
-    );
+          )
+        : _user == null
+            ? const LoginScreen() // if user is empty redirect to AppInfoScreen
+            : const HomeScreen(); //
   }
 }
