@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:split_commute/config/decorations.dart' as decoration;
 import 'package:split_commute/utils/utilFunctions.dart';
+import 'package:split_commute/config/palette.dart' as palette;
 
 String userName = "Logging in...";
 String phoneNumber = "";

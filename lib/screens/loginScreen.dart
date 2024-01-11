@@ -6,7 +6,6 @@ import 'package:split_commute/widgets/policyDialog.dart';
 import 'package:intl_phone_field/countries.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:split_commute/config/decorations.dart' as decoration;
-
 import 'package:split_commute/config/palette.dart' as palette;
 
 //this screen is used to login user in app
@@ -27,7 +26,6 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
@@ -41,7 +39,6 @@ class _LoginScreenState extends State<LoginScreen> {
                     scale: 5,
                   ),
                   const SizedBox(height: 50),
-                  //text-field to enter country code and phone number
                   IntlPhoneField(
                     inputFormatters: [
                       //for below version 2

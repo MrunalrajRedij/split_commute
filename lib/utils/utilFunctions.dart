@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -13,9 +14,21 @@ class UtilFunctions {
     );
   }
 
+  Future clearSearchingFromDB() {
+    return FirebaseFirestore.instance
+        .collection("users")
+        .doc(FirebaseAuth.instance.currentUser!.phoneNumber)
+        .collection("searching")
+        .doc("searching")
+        .set({
+      "startingPoint": "",
+      "endingPoint": "",
+    });
+  }
+
   //logout func
-  void logOut(context) {
-    //redirect to loginScreen
+  void logOut(context) async {
+    await clearSearchingFromDB();
     Navigator.pushNamedAndRemoveUntil(
         context, "/LoginScreen", (route) => false);
     FirebaseAuth.instance.signOut();

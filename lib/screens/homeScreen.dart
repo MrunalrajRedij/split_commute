@@ -18,6 +18,35 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   User? user = FirebaseAuth.instance.currentUser;
   FirebaseFirestore db = FirebaseFirestore.instance;
+  List<String> startingPoints = [];
+  List<String> endingPoints = [];
+  TextEditingController startingPointTC = TextEditingController();
+  TextEditingController endingPointTC = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    getStartingPoints();
+    getEndingPoints();
+  }
+
+  void getStartingPoints() async {
+    await db.collection("startingPoints").snapshots().forEach((element) {
+      for (var element in element.docs) {
+        print(element.get('startingPoint'));
+        startingPoints.add(element.get("startingPoint"));
+      }
+    });
+  }
+
+  void getEndingPoints() async {
+    await db.collection("endingPoints").snapshots().forEach((element) {
+      for (var element in element.docs) {
+        print(element.get('endingPoint'));
+        endingPoints.add(element.get("endingPoint"));
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -68,29 +97,36 @@ class _HomeScreenState extends State<HomeScreen> {
                                 debounceDuration:
                                     const Duration(milliseconds: 500),
                                 textFieldConfiguration: TextFieldConfiguration(
+                                  controller: startingPointTC,
                                   decoration: InputDecoration(
                                     border: InputBorder.none,
                                     hintText: "Starting Point",
                                   ),
                                 ),
-                                itemBuilder: (BuildContext context, value) {
-                                  return ListTile();
-                                },
                                 noItemsFoundBuilder: (context) => Center(
-                                  child: Text(
-                                    'No Items Found!',
-                                    style: decoration.normal14TS,
-                                  ),
-                                ),
-                                suggestionsCallback: (String search) {
-                                  return db
-                                      .collection("startingPoints")
-                                      .snapshots()
-                                      .toList();
+                                    child: Text(
+                                  'No Items Found!',
+                                  style: decoration.normal14TS,
+                                )),
+                                suggestionsCallback: (String search) async {
+                                  return startingPoints.where((element) =>
+                                      element
+                                          .toLowerCase()
+                                          .contains(search.toLowerCase()));
                                 },
-                                onSuggestionSelected:
-                                    (QuerySnapshot<Map<String, dynamic>>
-                                        suggestion) {},
+                                onSuggestionSelected: (suggestions) {
+                                  startingPointTC.text = suggestions;
+                                },
+                                itemBuilder: (context, suggestion) {
+                                  return ListTile(
+                                    visualDensity:
+                                        const VisualDensity(vertical: -4),
+                                    title: Text(
+                                      suggestion,
+                                      style: decoration.normal14TS,
+                                    ),
+                                  );
+                                },
                               ),
                               Divider(
                                 height: 30,
@@ -99,29 +135,35 @@ class _HomeScreenState extends State<HomeScreen> {
                                 debounceDuration:
                                     const Duration(milliseconds: 500),
                                 textFieldConfiguration: TextFieldConfiguration(
+                                  controller: endingPointTC,
                                   decoration: InputDecoration(
                                     border: InputBorder.none,
                                     hintText: "Ending Point",
                                   ),
                                 ),
-                                itemBuilder: (BuildContext context, value) {
-                                  return ListTile();
-                                },
                                 noItemsFoundBuilder: (context) => Center(
-                                  child: Text(
-                                    'No Items Found!',
-                                    style: decoration.normal14TS,
-                                  ),
-                                ),
-                                suggestionsCallback: (String search) {
-                                  return db
-                                      .collection("startingPoints")
-                                      .snapshots()
-                                      .toList();
+                                    child: Text(
+                                  'No Items Found!',
+                                  style: decoration.normal14TS,
+                                )),
+                                suggestionsCallback: (String search) async {
+                                  return endingPoints.where((element) => element
+                                      .toLowerCase()
+                                      .contains(search.toLowerCase()));
                                 },
-                                onSuggestionSelected:
-                                    (QuerySnapshot<Map<String, dynamic>>
-                                        suggestion) {},
+                                onSuggestionSelected: (suggestions) {
+                                  endingPointTC.text = suggestions;
+                                },
+                                itemBuilder: (context, suggestion) {
+                                  return ListTile(
+                                    visualDensity:
+                                        const VisualDensity(vertical: -4),
+                                    title: Text(
+                                      suggestion,
+                                      style: decoration.normal14TS,
+                                    ),
+                                  );
+                                },
                               ),
                             ],
                           ),
