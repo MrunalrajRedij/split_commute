@@ -33,7 +33,6 @@ class _HomeScreenState extends State<HomeScreen> {
   void getStartingPoints() async {
     await db.collection("startingPoints").snapshots().forEach((element) {
       for (var element in element.docs) {
-        print(element.get('startingPoint'));
         startingPoints.add(element.get("startingPoint"));
       }
     });
@@ -42,7 +41,6 @@ class _HomeScreenState extends State<HomeScreen> {
   void getEndingPoints() async {
     await db.collection("endingPoints").snapshots().forEach((element) {
       for (var element in element.docs) {
-        print(element.get('endingPoint'));
         endingPoints.add(element.get("endingPoint"));
       }
     });
@@ -200,6 +198,9 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ),
                     ),
+
+                    //recent journey
+                    //recent companions
                   ],
                 ),
               ),

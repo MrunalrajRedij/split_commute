@@ -1,12 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:split_commute/config/decorations.dart' as decoration;
 import 'package:split_commute/utils/utilFunctions.dart';
-import 'package:split_commute/config/palette.dart' as palette;
 
-String userName = "Logging in...";
-String phoneNumber = "";
-
-//menu drawer for navigation between different screens
 class MenuDrawer extends Drawer {
   const MenuDrawer({Key? key}) : super(key: key);
   @override
@@ -26,7 +21,7 @@ class MenuDrawer extends Drawer {
           ),
           //home screen btn
           ListTile(
-            horizontalTitleGap: 0,
+            horizontalTitleGap: 10,
             leading: const Icon(Icons.home),
             title: Text(
               'Home',
@@ -34,35 +29,9 @@ class MenuDrawer extends Drawer {
             ),
             onTap: () => changeScreenFunc(context, "/HomeScreen"),
           ),
-
-          //list of msg screen btn
-          ListTile(
-            horizontalTitleGap: 0,
-            leading: const Icon(Icons.sms),
-            title: Text(
-              'Messages',
-              style: decoration.lightBlackHeading12TS,
-            ),
-            onTap: () {
-              //if ccLogin then do further process
-              changeScreenFunc(context, "/SelectDialogScreen");
-            },
-          ),
-
-          //history btn
-          ListTile(
-            horizontalTitleGap: 0,
-            leading: const Icon(Icons.history),
-            title: Text(
-              'My History',
-              style: decoration.lightBlackHeading12TS,
-            ),
-            onTap: () => changeScreenFunc(context, "/HistoryScreen"),
-          ),
-
           //profile screen btn
           ListTile(
-            horizontalTitleGap: 0,
+            horizontalTitleGap: 10,
             leading: Icon(
               Icons.person,
             ),
@@ -74,42 +43,42 @@ class MenuDrawer extends Drawer {
           ),
           //privacy policy btn
           ListTile(
-            horizontalTitleGap: 0,
+            horizontalTitleGap: 10,
             leading: const Icon(Icons.policy),
             title: Text(
               'Privacy Policy',
               style: decoration.lightBlackHeading12TS,
             ),
-            onTap: () async {
-              Navigator.pop(context);
+            onTap: () {
+              UtilFunctions().privacyPolicyWidget(context);
             },
           ),
 
           //refer a friend screen btn
           ListTile(
-            horizontalTitleGap: 0,
+            horizontalTitleGap: 10,
             leading: const Icon(Icons.share),
             title: Text(
               'Refer A Friend',
               style: decoration.lightBlackHeading12TS,
             ),
-            onTap: () async {},
+            onTap: () {},
           ),
 
           //support screen btn
           ListTile(
-            horizontalTitleGap: 0,
+            horizontalTitleGap: 10,
             leading: const Icon(Icons.support_agent),
             title: Text(
               'Support/Help',
               style: decoration.lightBlackHeading12TS,
             ),
-            onTap: () => changeScreenFunc(context, "/SupportScreen"),
+            onTap: () {},
           ),
 
           //logout btn
           ListTile(
-            horizontalTitleGap: 0,
+            horizontalTitleGap: 10,
             leading: const Icon(Icons.logout),
             title: Text(
               'Logout',

@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:split_commute/widgets/policyDialog.dart';
 
 //this class is used to implement common functionalities through out the app
 //So less repeatable code is used
@@ -12,6 +13,12 @@ class UtilFunctions {
         content: Text(msg),
       ),
     );
+  }
+
+  void privacyPolicyWidget(context){
+    showDialog(context: context, builder: (context){
+      return PolicyDialog(mdFileName: 'tos.md');
+    });
   }
 
   Future clearSearchingFromDB() {

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -7,7 +8,6 @@ import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:split_commute/Screens/loginScreen.dart';
 import 'package:split_commute/config/palette.dart' as palette;
 import 'package:split_commute/config/decorations.dart' as decoration;
-import 'package:split_commute/screens/homeScreen.dart';
 import 'package:split_commute/utils/utilFunctions.dart';
 
 //after login screen show this screen for authentication through OTP
@@ -108,30 +108,33 @@ class _OtpAuthScreenState extends State<OtpAuthScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: SafeArea(
-        child: SingleChildScrollView(
+      body: SingleChildScrollView(
+        child: SafeArea(
           child: Container(
             padding: const EdgeInsets.only(left: 20, right: 20),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                decoration.sizedBoxWithHeight10,
-                isCheckingOTP
-                    ?
-                    //show loading widget, whenever there is loading
-                    const SpinKitWave(
-                        color: palette.primaryColor,
-                        size: 25,
-                      )
-                    : Padding(
-                        padding: const EdgeInsets.only(top: 130),
-                        child: Column(
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 100),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  decoration.sizedBoxWithHeight10,
+                  isCheckingOTP
+                      ?
+                      //show loading widget, whenever there is loading
+                      Padding(
+                          padding: const EdgeInsets.only(top: 350),
+                          child: const SpinKitWave(
+                            color: palette.primaryColor,
+                            size: 25,
+                          ),
+                        )
+                      : Column(
                           children: [
                             Image.asset(
                               'assets/images/logo.png',
-                              scale: 5,
+                              scale: 3,
                             ),
-                            const SizedBox(height: 50),
+                            const SizedBox(height: 20),
                             Align(
                               alignment: Alignment.topLeft,
                               child: Text(
@@ -233,8 +236,8 @@ class _OtpAuthScreenState extends State<OtpAuthScreen> {
                             ),
                           ],
                         ),
-                      ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
@@ -315,15 +318,20 @@ class _OtpAuthScreenState extends State<OtpAuthScreen> {
       final authCredential =
           await _auth.signInWithCredential(phoneAuthCredential);
       if (authCredential.user != null) {
-        Navigator.pushNamedAndRemoveUntil(
-            context, "/HomeScreen", (route) => false);
-        Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(builder: (context) {
-            return HomeScreen();
-          }),
-          (route) => false,
-        );
+        if (!mounted) return;
+        FirebaseFirestore.instance
+            .collection("users")
+            .doc(FirebaseAuth.instance.currentUser!.phoneNumber)
+            .snapshots()
+            .forEach((element) {
+          if (element.data()!.isEmpty) {
+            Navigator.pushNamedAndRemoveUntil(
+                context, "/GetInfoScreen", (route) => false);
+          } else {
+            Navigator.pushNamedAndRemoveUntil(
+                context, "/HomeScreen", (route) => false);
+          }
+        });
       }
     } catch (error) {
       setState(() {
@@ -331,6 +339,7 @@ class _OtpAuthScreenState extends State<OtpAuthScreen> {
           isCheckingOTP = false;
         });
       });
+      if (!mounted) return;
       //if error, show scaffold msg with firebase error response
       UtilFunctions().showScaffoldMsg(context, error.toString());
     }
