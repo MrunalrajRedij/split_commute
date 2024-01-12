@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:split_commute/screens/searchCompanionScreen.dart';
+import 'package:split_commute/utils/utilFunctions.dart';
 import 'package:split_commute/widgets/menuDrawer.dart';
 import 'package:split_commute/config/palette.dart' as palette;
 import 'package:split_commute/config/decorations.dart' as decoration;
@@ -26,6 +27,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
+    UtilFunctions().checkIfUserFirstTime(context);
     getStartingPoints();
     getEndingPoints();
   }

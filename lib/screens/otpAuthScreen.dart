@@ -319,19 +319,7 @@ class _OtpAuthScreenState extends State<OtpAuthScreen> {
           await _auth.signInWithCredential(phoneAuthCredential);
       if (authCredential.user != null) {
         if (!mounted) return;
-        FirebaseFirestore.instance
-            .collection("users")
-            .doc(FirebaseAuth.instance.currentUser!.phoneNumber)
-            .snapshots()
-            .forEach((element) {
-          if (element.data()!.isEmpty) {
-            Navigator.pushNamedAndRemoveUntil(
-                context, "/GetInfoScreen", (route) => false);
-          } else {
-            Navigator.pushNamedAndRemoveUntil(
-                context, "/HomeScreen", (route) => false);
-          }
-        });
+        UtilFunctions().checkIfUserFirstTime(context);
       }
     } catch (error) {
       setState(() {

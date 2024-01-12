@@ -1,12 +1,16 @@
 import 'dart:io';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:split_commute/config/decorations.dart' as decoration;
 import 'package:split_commute/config/palette.dart' as palette;
+import 'package:split_commute/config/values.dart' as values;
 import 'package:split_commute/screens/homeScreen.dart';
+import 'package:split_commute/utils/utilFunctions.dart';
 import 'package:split_commute/widgets/avatarWidget.dart';
 import 'package:split_commute/widgets/dividerWidget.dart';
 
@@ -20,7 +24,7 @@ class GetInfoScreen extends StatefulWidget {
 
 class _GetInfoScreenState extends State<GetInfoScreen> {
   TextEditingController userNameTC = TextEditingController();
-  String profileAvatarName = "";
+  String profilePicUrl = "";
   //booleans for avatar selection
   bool isAvatar1 = false;
   bool isAvatar2 = false;
@@ -45,9 +49,10 @@ class _GetInfoScreenState extends State<GetInfoScreen> {
                 Center(
                   child: Image.asset(
                     'assets/images/logo.png',
-                    scale: 9,
+                    scale: 5,
                   ),
                 ),
+                SizedBox(height: 10),
                 Row(
                   children: [
                     Text(
@@ -147,7 +152,7 @@ class _GetInfoScreenState extends State<GetInfoScreen> {
                             isAvatar1 = false;
                           } else {
                             //set profilePic path
-                            profileAvatarName = "";
+                            profilePicUrl = values.boyProfilePicLink;
                             isAvatar1 = true;
                             isAvatar2 = false;
                             isAvatar3 = false;
@@ -157,7 +162,38 @@ class _GetInfoScreenState extends State<GetInfoScreen> {
                           setState(() {});
                         },
                         child: AvatarWidget(
-                          avatarImage: Image.asset('assets/images/logo.png'),
+                          avatarImage: CachedNetworkImage(
+                            imageUrl: values.boyProfilePicLink,
+                            placeholder: (context, url) => Container(
+                              width: 50.0,
+                              height: 50.0,
+                              padding: const EdgeInsets.all(70.0),
+                              decoration: const BoxDecoration(
+                                color: Color(0xffE8E8E8),
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(8.0),
+                                ),
+                              ),
+                              child: const CircularProgressIndicator(
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                    Color(0xfff5a623)),
+                              ),
+                            ),
+                            errorWidget: (context, url, error) =>
+                                //if there is any error in showing img show this instead
+                                Material(
+                              borderRadius: const BorderRadius.all(
+                                Radius.circular(8.0),
+                              ),
+                              clipBehavior: Clip.hardEdge,
+                              child: Image.asset(
+                                'images/img_not_available.jpeg',
+                                width: 50.0,
+                                height: 50.0,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
                           selected: isAvatar1,
                         ),
                       ),
@@ -168,7 +204,7 @@ class _GetInfoScreenState extends State<GetInfoScreen> {
                             isAvatar2 = false;
                           } else {
                             //set profilePic path
-                            profileAvatarName = "";
+                            profilePicUrl = values.girlProfilePicLink;
                             isAvatar1 = false;
                             isAvatar2 = true;
                             isAvatar3 = false;
@@ -178,8 +214,143 @@ class _GetInfoScreenState extends State<GetInfoScreen> {
                           setState(() {});
                         },
                         child: AvatarWidget(
-                          avatarImage: Image.asset('assets/images/logo.png'),
+                          avatarImage: CachedNetworkImage(
+                            imageUrl: values.girlProfilePicLink,
+                            placeholder: (context, url) => Container(
+                              width: 50.0,
+                              height: 50.0,
+                              padding: const EdgeInsets.all(70.0),
+                              decoration: const BoxDecoration(
+                                color: Color(0xffE8E8E8),
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(8.0),
+                                ),
+                              ),
+                              child: const CircularProgressIndicator(
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                    Color(0xfff5a623)),
+                              ),
+                            ),
+                            errorWidget: (context, url, error) =>
+                                //if there is any error in showing img show this instead
+                                Material(
+                              borderRadius: const BorderRadius.all(
+                                Radius.circular(8.0),
+                              ),
+                              clipBehavior: Clip.hardEdge,
+                              child: Image.asset(
+                                'images/img_not_available.jpeg',
+                                width: 50.0,
+                                height: 50.0,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
                           selected: isAvatar2,
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      GestureDetector(
+                        onTap: () {
+                          if (isAvatar3) {
+                            isAvatar3 = false;
+                          } else {
+                            //set profilePic path
+                            profilePicUrl = values.manProfilePicLink;
+                            isAvatar1 = false;
+                            isAvatar2 = false;
+                            isAvatar3 = true;
+                            isAvatar4 = false;
+                            isCustomAvatar = false;
+                          }
+                          setState(() {});
+                        },
+                        child: AvatarWidget(
+                          avatarImage: CachedNetworkImage(
+                            imageUrl: values.manProfilePicLink,
+                            placeholder: (context, url) => Container(
+                              width: 50.0,
+                              height: 50.0,
+                              padding: const EdgeInsets.all(70.0),
+                              decoration: const BoxDecoration(
+                                color: Color(0xffE8E8E8),
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(8.0),
+                                ),
+                              ),
+                              child: const CircularProgressIndicator(
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                    Color(0xfff5a623)),
+                              ),
+                            ),
+                            errorWidget: (context, url, error) =>
+                                //if there is any error in showing img show this instead
+                                Material(
+                              borderRadius: const BorderRadius.all(
+                                Radius.circular(8.0),
+                              ),
+                              clipBehavior: Clip.hardEdge,
+                              child: Image.asset(
+                                'images/img_not_available.jpeg',
+                                width: 50.0,
+                                height: 50.0,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
+                          selected: isAvatar3,
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      GestureDetector(
+                        onTap: () {
+                          if (isAvatar4) {
+                            isAvatar4 = false;
+                          } else {
+                            //set profilePic path
+                            profilePicUrl = values.womanProfilePicLink;
+                            isAvatar1 = false;
+                            isAvatar2 = false;
+                            isAvatar3 = false;
+                            isAvatar4 = true;
+                            isCustomAvatar = false;
+                          }
+                          setState(() {});
+                        },
+                        child: AvatarWidget(
+                          avatarImage: CachedNetworkImage(
+                            imageUrl: values.womanProfilePicLink,
+                            placeholder: (context, url) => Container(
+                              width: 50.0,
+                              height: 50.0,
+                              padding: const EdgeInsets.all(70.0),
+                              decoration: const BoxDecoration(
+                                color: Color(0xffE8E8E8),
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(8.0),
+                                ),
+                              ),
+                              child: const CircularProgressIndicator(
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                    Color(0xfff5a623)),
+                              ),
+                            ),
+                            errorWidget: (context, url, error) =>
+                                //if there is any error in showing img show this instead
+                                Material(
+                              borderRadius: const BorderRadius.all(
+                                Radius.circular(8.0),
+                              ),
+                              clipBehavior: Clip.hardEdge,
+                              child: Image.asset(
+                                'images/img_not_available.jpeg',
+                                width: 50.0,
+                                height: 50.0,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
+                          selected: isAvatar4,
                         ),
                       ),
                       const SizedBox(width: 10),
@@ -204,6 +375,7 @@ class _GetInfoScreenState extends State<GetInfoScreen> {
                         height: 40,
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
+                            backgroundColor: palette.primaryColor,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(
                                   decoration.boxBorderRadius),
@@ -211,51 +383,34 @@ class _GetInfoScreenState extends State<GetInfoScreen> {
                           ),
                           onPressed: () async {
                             if (userNameTC.text.trim().isEmpty) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text('Enter Valid Name!'),
-                                ),
-                              );
+                              UtilFunctions().showScaffoldMsg(
+                                  context, "Enter Valid Name!");
                             } else if (!isAvatar1 &&
                                 !isAvatar2 &&
                                 !isAvatar3 &&
                                 !isAvatar4 &&
                                 !isCustomAvatar) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text(
-                                      'Select any one Avatar or upload your custom profile pic!'),
-                                ),
+                              UtilFunctions().showScaffoldMsg(
+                                context,
+                                "Select any one Avatar or upload your custom profile pic!",
                               );
                             } else {
                               //starts loading indicator, if everything validates
-                              setState(() {
-                                loading = true;
-                              });
-
-                              String? phoneNumber = FirebaseAuth
-                                  .instance.currentUser!.phoneNumber;
-                              //update profile
-                              FirebaseFirestore.instance
-                                  .collection("users")
-                                  .doc(phoneNumber)
-                                  .set({
-                                "userId": phoneNumber,
-                                "profilePic": "",
-                              });
-
-                              //update UI
-                              setState(() {
-                                loading = false;
-                              });
-
-                              if (!mounted) return;
-                              //redirect to role selection screen
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => const HomeScreen()),
-                              );
+                              //update profile pic separately
+                              if (isCustomAvatar && image != null) {
+                                setState(() {
+                                  loading = true;
+                                });
+                                await uploadPic(image);
+                              } else if (isCustomAvatar && image == null) {
+                                UtilFunctions().showScaffoldMsg(context,
+                                    "Upload Custom Image or select from Avatars");
+                              } else {
+                                setState(() {
+                                  loading = true;
+                                });
+                                saveDataAndRoute();
+                              }
                             }
                           },
                           child: Text(
@@ -269,6 +424,42 @@ class _GetInfoScreenState extends State<GetInfoScreen> {
           ),
         ),
       ),
+    );
+  }
+
+  Future<void> uploadPic(File? file) async {
+    //Create a reference to the location you want to upload to in firebase
+    Reference ref =
+        FirebaseStorage.instance.ref().child("profilePics/${image!.path}");
+    UploadTask uploadTask = ref.putFile(file!);
+    // Waits till the file is uploaded then stores the download url
+    await uploadTask.whenComplete(() {
+      ref.getDownloadURL().then((value) {
+        profilePicUrl = value;
+        saveDataAndRoute();
+      });
+    });
+  }
+
+  void saveDataAndRoute() {
+    String? phoneNumber = FirebaseAuth.instance.currentUser!.phoneNumber;
+    //update profile
+    FirebaseFirestore.instance.collection("users").doc(phoneNumber).set({
+      "userId": phoneNumber,
+      "userName": userNameTC.text,
+      "profilePicUrl": profilePicUrl,
+    });
+
+    //update UI
+    setState(() {
+      loading = false;
+    });
+
+    if (!mounted) return;
+    //redirect to role selection screen
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const HomeScreen()),
     );
   }
 

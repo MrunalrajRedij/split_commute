@@ -15,10 +15,26 @@ class UtilFunctions {
     );
   }
 
-  void privacyPolicyWidget(context){
-    showDialog(context: context, builder: (context){
-      return PolicyDialog(mdFileName: 'tos.md');
+  void checkIfUserFirstTime(context) {
+    final doc = FirebaseFirestore.instance
+        .collection("users")
+        .doc(FirebaseAuth.instance.currentUser!.phoneNumber)
+        .get();
+
+    doc.then((value) {
+      if (!value.exists) {
+        Navigator.pushNamedAndRemoveUntil(
+            context, "/GetInfoScreen", (route) => false);
+      }
     });
+  }
+
+  void privacyPolicyWidget(context) {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return PolicyDialog(mdFileName: 'tos.md');
+        });
   }
 
   Future clearSearchingFromDB() {

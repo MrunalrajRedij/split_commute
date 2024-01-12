@@ -1,8 +1,8 @@
 const String boyProfilePicLink =
-    "https://firebasestorage.googleapis.com/v0/b/splitcommute.appspot.com/o/boy.png?alt=media&token=405bcfb6-478b-4e71-ad02-bd78d46391eb";
+    "https://firebasestorage.googleapis.com/v0/b/splitcommute.appspot.com/o/profilePics%2Fboy.png?alt=media&token=fd3639e1-09dc-4d23-8c91-7eb3660ef7a5";
 const String girlProfilePicLink =
-    "https://firebasestorage.googleapis.com/v0/b/splitcommute.appspot.com/o/girl.png?alt=media&token=04760e8d-41ca-4612-a53e-08e0329c3a0e";
+    "https://firebasestorage.googleapis.com/v0/b/splitcommute.appspot.com/o/profilePics%2Fgirl.png?alt=media&token=b93d1759-1188-42a9-95df-3a15859d7a4a";
 const String manProfilePicLink =
-    "https://firebasestorage.googleapis.com/v0/b/splitcommute.appspot.com/o/man.png?alt=media&token=2a7df00f-6e52-4a4e-a3a6-0de198d13d6f";
+    "https://firebasestorage.googleapis.com/v0/b/splitcommute.appspot.com/o/profilePics%2Fman.png?alt=media&token=1d01818a-d7a3-43ec-bfca-2cdac546b0ea";
 const String womanProfilePicLink =
-    "https://firebasestorage.googleapis.com/v0/b/splitcommute.appspot.com/o/woman.png?alt=media&token=df581347-0bac-4900-a2b2-07e0e1b4d6d8";
+    "https://firebasestorage.googleapis.com/v0/b/splitcommute.appspot.com/o/profilePics%2Fwoman.png?alt=media&token=6c35befc-5634-4b89-8cd2-d6d5058a4983";

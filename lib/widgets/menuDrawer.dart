@@ -89,6 +89,26 @@ class MenuDrawer extends Drawer {
               UtilFunctions().logOut(context);
             },
           ),
+
+          ListTile(
+            horizontalTitleGap: 0,
+            title: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Image.asset(
+                  'assets/images/donateIcon.png',
+                  scale: 15,
+                ),
+                const SizedBox(width: 10),
+                Text(
+                  'Want to Support?\nBuy me a Coffee!',
+                  style: decoration.redBold14TS,
+                ),
+              ],
+            ),
+            onTap: () async {},
+          ),
+          const SizedBox(height: 10),
         ],
       ),
     );
