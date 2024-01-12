@@ -54,6 +54,7 @@ TextStyle resendAndEditPhoneTextStyle = TextStyle(
 //normalStyle text
 TextStyle normal12TS = TextStyle(fontSize: 12.sp);
 TextStyle normal14TS = TextStyle(fontSize: 14.sp);
+TextStyle normal18TS = TextStyle(fontSize: 18.sp);
 
 //lightblack tile heading text
 TextStyle lightBlackHeading12TS = TextStyle(
@@ -154,7 +155,7 @@ TextStyle lightRobotoBoldTS = TextStyle(
 //general black semi large roboto-bold ts
 
 TextStyle robotoBoldTS =
-TextStyle(fontWeight: FontWeight.bold, fontSize: 17.sp);
+    TextStyle(fontWeight: FontWeight.bold, fontSize: 17.sp);
 //Large blueHeadingTS
 TextStyle blueHeadingTS = TextStyle(
     fontWeight: FontWeight.bold, color: palette.primaryColor, fontSize: 35.sp);

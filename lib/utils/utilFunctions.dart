@@ -3,6 +3,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:split_commute/widgets/policyDialog.dart';
 
+import 'package:split_commute/config/palette.dart' as palette;
+import 'package:split_commute/config/decorations.dart' as decoration;
+
 //this class is used to implement common functionalities through out the app
 //So less repeatable code is used
 class UtilFunctions {
@@ -10,7 +13,10 @@ class UtilFunctions {
   void showScaffoldMsg(BuildContext context, String msg) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(msg),
+        content: Text(
+          msg,
+          style: decoration.whiteBold14TS,
+        ),
       ),
     );
   }

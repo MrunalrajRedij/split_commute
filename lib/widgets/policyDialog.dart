@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:split_commute/config/palette.dart' as palette;
 
 class PolicyDialog extends StatelessWidget {
   final double radius;
@@ -10,14 +11,14 @@ class PolicyDialog extends StatelessWidget {
     this.radius = 8,
     required this.mdFileName,
   })  : assert(mdFileName.contains('.md'),
-  'The file must contain the .md extension'),
+            'The file must contain the .md extension'),
         super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Dialog(
       shape:
-      RoundedRectangleBorder(borderRadius: BorderRadius.circular(radius)),
+          RoundedRectangleBorder(borderRadius: BorderRadius.circular(radius)),
       child: Column(
         children: [
           Expanded(
@@ -40,8 +41,8 @@ class PolicyDialog extends StatelessWidget {
           ),
           TextButton(
             style: TextButton.styleFrom(
-              foregroundColor: Colors.black,
-              backgroundColor: Colors.grey,
+              foregroundColor: Colors.white,
+              backgroundColor: palette.primaryColor,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.only(
                   bottomLeft: Radius.circular(radius),
@@ -58,7 +59,7 @@ class PolicyDialog extends StatelessWidget {
                 ),
               ),
               alignment: Alignment.center,
-              height: 50,
+              height: 40,
               width: double.infinity,
               child: const Text(
                 "CLOSE",

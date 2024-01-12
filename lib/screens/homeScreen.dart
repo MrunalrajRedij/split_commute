@@ -34,6 +34,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void getStartingPoints() async {
     await db.collection("startingPoints").snapshots().forEach((element) {
+      startingPoints.clear();
       for (var element in element.docs) {
         startingPoints.add(element.get("startingPoint"));
       }
@@ -42,6 +43,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void getEndingPoints() async {
     await db.collection("endingPoints").snapshots().forEach((element) {
+      endingPoints.clear();
       for (var element in element.docs) {
         endingPoints.add(element.get("endingPoint"));
       }
@@ -98,15 +100,35 @@ class _HomeScreenState extends State<HomeScreen> {
                                     const Duration(milliseconds: 500),
                                 textFieldConfiguration: TextFieldConfiguration(
                                   controller: startingPointTC,
+                                  style: decoration.normal18TS,
+                                  onChanged: (val) {
+                                    setState(() {});
+                                  },
                                   decoration: InputDecoration(
                                     border: InputBorder.none,
                                     hintText: "Starting Point",
+                                    suffixIcon: startingPointTC.text.isEmpty
+                                        ? SizedBox(
+                                            width: 0,
+                                            height: 0,
+                                          )
+                                        : IconButton(
+                                            onPressed: () {
+                                              setState(() {
+                                                startingPointTC.clear();
+                                              });
+                                            },
+                                            icon: Icon(
+                                              Icons.clear,
+                                              color: palette.greyColor,
+                                            ),
+                                          ),
                                   ),
                                 ),
                                 noItemsFoundBuilder: (context) => Center(
                                     child: Text(
                                   'No Items Found!',
-                                  style: decoration.normal14TS,
+                                  style: decoration.normal18TS,
                                 )),
                                 suggestionsCallback: (String search) async {
                                   return startingPoints.where((element) =>
@@ -116,14 +138,21 @@ class _HomeScreenState extends State<HomeScreen> {
                                 },
                                 onSuggestionSelected: (suggestions) {
                                   startingPointTC.text = suggestions;
+                                  setState(() {});
                                 },
                                 itemBuilder: (context, suggestion) {
                                   return ListTile(
-                                    visualDensity:
-                                        const VisualDensity(vertical: -4),
-                                    title: Text(
-                                      suggestion,
-                                      style: decoration.normal14TS,
+                                    title: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        SizedBox(height: 10),
+                                        Text(
+                                          suggestion,
+                                          style: decoration.normal18TS,
+                                        ),
+                                        SizedBox(height: 10),
+                                      ],
                                     ),
                                   );
                                 },
@@ -136,15 +165,35 @@ class _HomeScreenState extends State<HomeScreen> {
                                     const Duration(milliseconds: 500),
                                 textFieldConfiguration: TextFieldConfiguration(
                                   controller: endingPointTC,
+                                  style: decoration.normal18TS,
+                                  onChanged: (val) {
+                                    setState(() {});
+                                  },
                                   decoration: InputDecoration(
                                     border: InputBorder.none,
                                     hintText: "Ending Point",
+                                    suffixIcon: endingPointTC.text.isEmpty
+                                        ? SizedBox(
+                                            width: 0,
+                                            height: 0,
+                                          )
+                                        : IconButton(
+                                            onPressed: () {
+                                              setState(() {
+                                                endingPointTC.clear();
+                                              });
+                                            },
+                                            icon: Icon(
+                                              Icons.clear,
+                                              color: palette.greyColor,
+                                            ),
+                                          ),
                                   ),
                                 ),
                                 noItemsFoundBuilder: (context) => Center(
                                     child: Text(
                                   'No Items Found!',
-                                  style: decoration.normal14TS,
+                                  style: decoration.normal18TS,
                                 )),
                                 suggestionsCallback: (String search) async {
                                   return endingPoints.where((element) => element
@@ -153,14 +202,21 @@ class _HomeScreenState extends State<HomeScreen> {
                                 },
                                 onSuggestionSelected: (suggestions) {
                                   endingPointTC.text = suggestions;
+                                  setState(() {});
                                 },
                                 itemBuilder: (context, suggestion) {
                                   return ListTile(
-                                    visualDensity:
-                                        const VisualDensity(vertical: -4),
-                                    title: Text(
-                                      suggestion,
-                                      style: decoration.normal14TS,
+                                    title: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        SizedBox(height: 10),
+                                        Text(
+                                          suggestion,
+                                          style: decoration.normal18TS,
+                                        ),
+                                        SizedBox(height: 10),
+                                      ],
                                     ),
                                   );
                                 },
@@ -184,15 +240,30 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         ),
                         onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const SearchCompanionScreen(
-                                startingPoint: "VJTI",
-                                endingPoint: "Dadar",
+                          if (startingPointTC.text.isEmpty ||
+                              endingPointTC.text.isEmpty) {
+                            UtilFunctions().showScaffoldMsg(context,
+                                "Input Starting and Ending points !!!");
+                          } else if (startingPointTC.text ==
+                              endingPointTC.text) {
+                            UtilFunctions().showScaffoldMsg(context,
+                                "Starting and Ending points cannot be same !!!");
+                          } else if (!startingPoints
+                                  .contains(startingPointTC.text) ||
+                              !endingPoints.contains(endingPointTC.text)) {
+                            UtilFunctions().showScaffoldMsg(context,
+                                "Enter valid Starting and Ending point !!!");
+                          } else {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => SearchCompanionScreen(
+                                  startingPoint: startingPointTC.text,
+                                  endingPoint: endingPointTC.text,
+                                ),
                               ),
-                            ),
-                          );
+                            );
+                          }
                         },
                         child: Text(
                           'Find Companions',

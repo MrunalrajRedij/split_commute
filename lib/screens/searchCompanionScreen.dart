@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:split_commute/config/palette.dart' as palette;
+import 'package:split_commute/utils/utilFunctions.dart';
 
 class SearchCompanionScreen extends StatefulWidget {
   final String startingPoint;
@@ -37,24 +38,20 @@ class _SearchCompanionScreenState extends State<SearchCompanionScreen>
   @override
   void dispose() {
     _controller.dispose();
+    UtilFunctions().clearSearchingFromDB();
     super.dispose();
   }
 
   void generateUserDoc(String phoneNumber) {
-    db
-        .collection("users")
-        .doc(phoneNumber)
-        .collection("searching")
-        .doc("searching")
-        .set(
+    db.collection("users").doc(phoneNumber).set(
       {
         "startingPoint": widget.startingPoint,
         "endingPoint": widget.endingPoint,
       },
-    ).then((value) => searchCompanionFunc());
+    ).then((value) => searchCompanionFunc(phoneNumber));
   }
 
-  void searchCompanionFunc() async {
+  void searchCompanionFunc(String phoneNumber) async {
     db
         .collection("users")
         .where(
@@ -69,6 +66,7 @@ class _SearchCompanionScreenState extends State<SearchCompanionScreen>
         .listen((event) {
       for (int i = 0; i < event.size; i++) {
         print("///" + event.docs[i]['userId']);
+        print("///" + event.docs[i]['userName']);
       }
     });
     ;

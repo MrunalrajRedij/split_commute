@@ -1,5 +1,6 @@
 import 'package:split_commute/screens/getInfoScreen.dart';
 import 'package:split_commute/screens/homeScreen.dart';
+import 'package:split_commute/screens/profileScreen.dart';
 import '../screens/loginScreen.dart';
 
 /*implemented routes which doesn't need pass any data between them
@@ -10,5 +11,6 @@ getRoutes() {
     "/LoginScreen": (context) => const LoginScreen(),
     "/HomeScreen": (context) => const HomeScreen(),
     "/GetInfoScreen": (context) => const GetInfoScreen(),
+    "/ProfileScreen": (context) => const ProfileScreen(),
   };
 }
