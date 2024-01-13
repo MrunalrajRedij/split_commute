@@ -50,8 +50,6 @@ class UtilFunctions {
     return FirebaseFirestore.instance.collection("users").doc(userId).update({
       "startingPoint": "",
       "endingPoint": "",
-      "grouped":false,
-      "groupId":"",
     });
   }
 

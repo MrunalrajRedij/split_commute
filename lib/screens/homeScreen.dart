@@ -273,8 +273,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
 
                     //recent journey
-                    //opened chatroom
-                    Container()
+                    //recent companions
                   ],
                 ),
               ),

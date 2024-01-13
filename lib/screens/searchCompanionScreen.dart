@@ -28,11 +28,9 @@ class _SearchCompanionScreenState extends State<SearchCompanionScreen>
   FirebaseFirestore db = FirebaseFirestore.instance;
   late AnimationController _controller;
   bool hidden = true;
-  // List<UserModel> userModels = [];
+  List<UserModel> userModels = [];
   List<UserModel> selectedUsers = [];
-  int joinedUsers = 0;
-  String groupId = "";
-  bool grouped = false;
+  int joinedUsers = 1;
 
   @override
   void initState() {
@@ -42,10 +40,10 @@ class _SearchCompanionScreenState extends State<SearchCompanionScreen>
         hidden = false;
       });
     });
+    generateUserDoc(user!.phoneNumber!);
     _controller =
         AnimationController(vsync: this, duration: const Duration(seconds: 20))
           ..repeat();
-    generateUserDoc(user!.phoneNumber!);
   }
 
   @override
@@ -55,157 +53,83 @@ class _SearchCompanionScreenState extends State<SearchCompanionScreen>
     super.dispose();
   }
 
-  void generateUserDoc(String phoneNumber) async {
-    await db.collection("users").doc(phoneNumber).update(
+  void generateUserDoc(String phoneNumber) {
+    db.collection("users").doc(phoneNumber).update(
       {
         "startingPoint": widget.startingPoint,
         "endingPoint": widget.endingPoint,
       },
-    );
-    searchForRoomOrCreateOne();
+    ).then((value) => searchCompanionFunc(phoneNumber));
   }
 
-  void searchForRoomOrCreateOne() async {
-    int i = 0;
-    int tempCount = 0;
-    while (true) {
-      String tempGroupId = "${widget.startingPoint}-${widget.endingPoint}-$i}";
-      await db.collection("groups").doc(tempGroupId).get().then((value) async {
-        if (groupId != "") return;
-        if (value.exists) {
-          await db
-              .collection("groups")
-              .doc(tempGroupId)
-              .get()
-              .then((value) async {
-            tempCount = value['count'];
-            if (tempCount < 2) {
-              await db
-                  .collection("users")
-                  .doc(user!.phoneNumber)
-                  .update({"grouped": true, "groupId": tempGroupId});
-              groupId = tempGroupId;
-              tempCount++;
-              await db
-                  .collection('groups')
-                  .doc("${widget.startingPoint}-${widget.endingPoint}-$i}")
-                  .set({"count": tempCount});
-              return;
-            }
-          });
-        } else {
-          await db
-              .collection('groups')
-              .doc("${widget.startingPoint}-${widget.endingPoint}-$i}")
-              .set({"count": 1});
-          await db
-              .collection('groups')
-              .doc("${widget.startingPoint}-${widget.endingPoint}-$i}")
-              .collection('messages')
-              .doc()
-              .set({
-            'recentMessage': "",
-            'recentMessageSender': "",
-            'recentMessageTime': "",
-          });
-          await db.collection("users").doc(user!.phoneNumber).update({
-            "grouped": true,
-            "groupId": "${widget.startingPoint}-${widget.endingPoint}-$i}"
-          });
-          groupId = "${widget.startingPoint}-${widget.endingPoint}-$i}";
-          return;
-        }
-      });
-      i++;
+  void searchCompanionFunc(String phoneNumber) async {
+    db
+        .collection("users")
+        .orderBy("userId")
+        .where(
+          "startingPoint",
+          isEqualTo: widget.startingPoint,
+        )
+        .where(
+          "endingPoint",
+          isEqualTo: widget.endingPoint,
+        )
+        .snapshots()
+        .listen((event) {
+      userModels.clear();
+      for (int i = 0; i < selectedUsers.length; i++) {
+        selectedUsers.add(
+          UserModel(
+            userId: event.docs[i]['userId'],
+            userName: event.docs[i]['userName'],
+            profilePicUrl: "event.docs[i]['profilePicUrl']",
+          ),
+        );
+        joinedUsers++;
+        setState(() {});
+      }
+      checkForGroupAndCreateGroup();
+    });
+  }
+
+  void checkForGroupAndCreateGroup() async {
+    if (selectedUsers.isEmpty) return;
+    print("////////Not empty");
+    for (int i = 0; i < 4; i++) {
+      if (selectedUsers[0].userId == user!.phoneNumber) {
+        await db
+            .collection("groups")
+            .doc(selectedUsers[0].userId)
+            .set({"ownerId": selectedUsers[0].userId});
+
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ChatRoomScreen(
+              userId: selectedUsers[0].userId,
+              groupId: selectedUsers[0].userId,
+            ),
+          ),
+        );
+        return;
+      } else {
+        final tempUserId = selectedUsers[i].userId;
+        db.collection("groups").doc(tempUserId).get().then((value) {
+          if (value.exists) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ChatRoomScreen(
+                  userId: user!.phoneNumber!,
+                  groupId: tempUserId,
+                ),
+              ),
+            );
+          }
+        });
+      }
     }
   }
-
-  // Future searchCompanionFunc(String phoneNumber) async {
-  //   db
-  //       .collection("users")
-  //       .where(
-  //         "startingPoint",
-  //         isEqualTo: widget.startingPoint,
-  //       )
-  //       .where(
-  //         "endingPoint",
-  //         isEqualTo: widget.endingPoint,
-  //       )
-  //       // .orderBy("userId", descending: false)
-  //       .get()
-  //       .then((event) async {
-  //     if (grouped) return;
-  //     int tempSize = 0;
-  //     if (event.size > 4) {
-  //       tempSize = 4;
-  //     } else {
-  //       tempSize = event.size;
-  //     }
-  //     // selectedUsers.clear();
-  //     joinedUsers = 0;
-  //     for (int i = 0; i < tempSize; i++) {
-  //       selectedUsers.add(
-  //         UserModel(
-  //           userId: event.docs[i]['userId'],
-  //           userName: event.docs[i]['userName'],
-  //           profilePicUrl: "event.docs[i]['profilePicUrl']",
-  //         ),
-  //       );
-  //       setState(() {
-  //         joinedUsers++;
-  //       });
-  //
-  //       // checkForCompanionsJoined(true, selectedUsers.length);
-  //     }
-  //   });
-  // }
-
-  // void checkForCompanionsJoined(bool wait, int len) async {
-  //   if (wait && selectedUsers.length > 4) {
-  //     checkForGroupAndCreateGroup();
-  //   } else if (!wait) {
-  //     checkForGroupAndCreateGroup();
-  //   }
-  // }
-  //
-  // void checkForGroupAndCreateGroup() async {
-  //   if (selectedUsers.isEmpty) return;
-  //   print(selectedUsers[0].userId);
-  //   for (int i = 0; i < 4; i++) {
-  //     if (selectedUsers[0].userId == user!.phoneNumber) {
-  //       await db
-  //           .collection("groups")
-  //           .doc(selectedUsers[0].userId)
-  //           .set({"ownerId": selectedUsers[0].userId});
-  //       if (!mounted) return;
-  //       Navigator.pushReplacement(
-  //         context,
-  //         MaterialPageRoute(
-  //           builder: (context) => ChatRoomScreen(
-  //             userId: selectedUsers[0].userId,
-  //             groupId: selectedUsers[0].userId,
-  //           ),
-  //         ),
-  //       );
-  //       return;
-  //     } else {
-  //       final tempUserId = selectedUsers[i].userId;
-  //       db.collection("groups").doc(tempUserId).get().then((value) {
-  //         if (value.exists) {
-  //           Navigator.pushReplacement(
-  //             context,
-  //             MaterialPageRoute(
-  //               builder: (context) => ChatRoomScreen(
-  //                 userId: user!.phoneNumber!,
-  //                 groupId: tempUserId,
-  //               ),
-  //             ),
-  //           );
-  //         }
-  //       });
-  //     }
-  //   }
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -260,40 +184,7 @@ class _SearchCompanionScreenState extends State<SearchCompanionScreen>
                             borderRadius: BorderRadius.circular(
                           30,
                         ))),
-                    onPressed: () async {
-                      // grouped = true;
-                      // for (int i = 0; i < selectedUsers.length; i++) {
-                      //   if (i == 0) {
-                      //     await db
-                      //         .collection("users")
-                      //         .doc(selectedUsers[0].userId)
-                      //         .update({
-                      //       "grouped": true,
-                      //       "groupId": selectedUsers[0].userId
-                      //     });
-                      //     groupId = selectedUsers[0].userId;
-                      //   } else {
-                      //     await db
-                      //         .collection("users")
-                      //         .doc(selectedUsers[i].userId)
-                      //         .update({
-                      //       "grouped": true,
-                      //       "groupId": selectedUsers[0].userId
-                      //     });
-                      //     groupId = selectedUsers[i].userId;
-                      //   }
-                      // }
-
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => ChatRoomScreen(
-                            userId: user!.phoneNumber!,
-                            groupId: groupId,
-                          ),
-                        ),
-                      );
-                    },
+                    onPressed: () {},
                     child: Text(
                       'Proceed',
                       style: decoration.whiteBold16TS,
