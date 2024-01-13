@@ -4,14 +4,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:split_commute/utils/utilFunctions.dart';
 import 'package:split_commute/widgets/menuDrawer.dart';
 import 'package:split_commute/config/decorations.dart' as decoration;
 import 'package:split_commute/config/palette.dart' as palette;
-import 'package:split_commute/config/values.dart' as values;
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({Key? key}) : super(key: key);
@@ -46,12 +44,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   fetchUserData() async {
-    db.collection("users").doc(user!.phoneNumber).get().then((value) {
+    await db.collection("users").doc(user!.phoneNumber).get().then((value) {
       userNameController.text = value['userName'] ?? "";
       phoneController.text = value['userId'] ?? "";
       emailController.text = value['email'] ?? "";
       profilePicUrl = value['profilePicUrl'] ?? "";
     });
+    setState(() {});
   }
 
   void saveProfile() async {
@@ -68,6 +67,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     setState(() {
       saving = false;
     });
+    if (!mounted) return;
     UtilFunctions().showScaffoldMsg(context, "Profile Saved!!!");
   }
 
@@ -153,36 +153,39 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       width: 160,
                       height: 160,
                       child: GestureDetector(
-                        child: CachedNetworkImage(
-                          imageUrl: values.boyProfilePicLink,
-                          placeholder: (context, url) => Container(
-                            width: 10.0,
-                            height: 10.0,
-                            padding: const EdgeInsets.all(70.0),
-                            decoration: const BoxDecoration(
-                              color: Color(0xffE8E8E8),
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(8.0),
+                        child: ClipOval(
+                          child: CachedNetworkImage(
+                            imageUrl: profilePicUrl,
+                            placeholder: (context, url) => Container(
+                              width: 10.0,
+                              height: 10.0,
+                              padding: const EdgeInsets.all(70.0),
+                              decoration: const BoxDecoration(
+                                color: Color(0xffE8E8E8),
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(8.0),
+                                ),
+                              ),
+                              child: const CircularProgressIndicator(
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                    Color(0xfff5a623)),
                               ),
                             ),
-                            child: const CircularProgressIndicator(
-                              valueColor: AlwaysStoppedAnimation<Color>(
-                                  Color(0xfff5a623)),
+                            errorWidget: (context, url, error) =>
+                                //if there is any error in showing img show this instead
+                                Material(
+                              borderRadius: const BorderRadius.all(
+                                Radius.circular(8.0),
+                              ),
+                              clipBehavior: Clip.hardEdge,
+                              child: Image.asset(
+                                'assets/images/man.png',
+                                width: 50.0,
+                                height: 50.0,
+                                fit: BoxFit.cover,
+                              ),
                             ),
-                          ),
-                          errorWidget: (context, url, error) =>
-                              //if there is any error in showing img show this instead
-                              Material(
-                            borderRadius: const BorderRadius.all(
-                              Radius.circular(8.0),
-                            ),
-                            clipBehavior: Clip.hardEdge,
-                            child: Image.asset(
-                              'images/img_not_available.jpeg',
-                              width: 50.0,
-                              height: 50.0,
-                              fit: BoxFit.cover,
-                            ),
+                            fit: BoxFit.cover,
                           ),
                         ),
                         onTap: () {
@@ -285,9 +288,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
           children: [
             //select from gallery btn
             GestureDetector(
-              child: Column(
+              child: const Column(
                 mainAxisSize: MainAxisSize.min,
-                children: const [
+                children: [
                   Icon(
                     Icons.image,
                     size: 50,
@@ -301,9 +304,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
             //capture live pic from camera btn
             GestureDetector(
-              child: Column(
+              child: const Column(
                 mainAxisSize: MainAxisSize.min,
-                children: const [
+                children: [
                   Icon(
                     Icons.camera_alt,
                     size: 50,
@@ -339,7 +342,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       if (image == null) return;
       final imageTemp = File(image.path);
       uploadPic(imageTemp);
-    } catch (e) {}
+    } catch (_) {}
   }
 
   Future<void> uploadPic(File? file) async {
@@ -358,6 +361,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             .update({
           "profilePicUrl": profilePicUrl,
         });
+        if (!mounted) return;
         UtilFunctions().showScaffoldMsg(context, "Profile Saved!!!");
       });
     });

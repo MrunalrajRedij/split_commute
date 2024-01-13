@@ -93,6 +93,8 @@ TextStyle blueGreyBold12TS = TextStyle(
     color: Colors.blueGrey, fontWeight: FontWeight.bold, fontSize: 12.sp);
 TextStyle blueGreyBold15TS = TextStyle(
     color: Colors.blueGrey, fontWeight: FontWeight.bold, fontSize: 15.sp);
+TextStyle blueGreyBold18TS = TextStyle(
+    color: Colors.blueGrey, fontWeight: FontWeight.bold, fontSize: 18.sp);
 
 //redHeading text
 TextStyle redBold14TS = TextStyle(

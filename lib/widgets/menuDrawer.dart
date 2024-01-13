@@ -25,7 +25,7 @@ class MenuDrawer extends Drawer {
                     scale: 4,
                   ),
                 ),
-                Divider(
+                const Divider(
                   height: 2,
                 ),
                 //home screen btn
@@ -41,7 +41,7 @@ class MenuDrawer extends Drawer {
                 //profile screen btn
                 ListTile(
                   horizontalTitleGap: 10,
-                  leading: Icon(
+                  leading: const Icon(
                     Icons.person,
                   ),
                   title: Text(
@@ -189,12 +189,12 @@ class MenuDrawer extends Drawer {
 
     Razorpay razorpay;
     String showSelectedCredits = "10";
-    void _handlePaymentSuccess(PaymentSuccessResponse response) async {
+    void handlePaymentSuccess(PaymentSuccessResponse response) async {
       Navigator.pop(context);
       UtilFunctions().showScaffoldMsg(context, "Payment Successful!");
     }
 
-    void _handlePaymentError(PaymentFailureResponse response) {
+    void handlePaymentError(PaymentFailureResponse response) {
       Navigator.pop(context);
       UtilFunctions()
           .showScaffoldMsg(context, response.message ?? "Error: Try Again!");
@@ -202,8 +202,8 @@ class MenuDrawer extends Drawer {
 
     //create razorPay instance
     razorpay = Razorpay();
-    razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
-    razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
+    razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, handlePaymentSuccess);
+    razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, handlePaymentError);
 
     void openCheckout(int amount) async {
       var options = {

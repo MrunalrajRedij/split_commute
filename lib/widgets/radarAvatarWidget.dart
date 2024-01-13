@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:split_commute/config/palette.dart' as palette;
 
 class RadarAvatarWidget extends StatefulWidget {
-  final String profilePicUrl;
-  const RadarAvatarWidget({super.key, required this.profilePicUrl});
+  final String path;
+  const RadarAvatarWidget({super.key, required this.path});
 
   @override
   State<RadarAvatarWidget> createState() => _RadarAvatarWidgetState();
@@ -20,7 +20,7 @@ class _RadarAvatarWidgetState extends State<RadarAvatarWidget> {
         radius: 30,
         backgroundColor: palette.primaryColor,
         child: CircleAvatar(
-          backgroundImage: NetworkImage(widget.profilePicUrl),
+          backgroundImage: AssetImage(widget.path),
           radius: 35,
         ),
       ),

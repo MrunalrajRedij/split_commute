@@ -52,7 +52,7 @@ class _GetInfoScreenState extends State<GetInfoScreen> {
                     scale: 5,
                   ),
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 Row(
                   children: [
                     Text(
@@ -152,7 +152,7 @@ class _GetInfoScreenState extends State<GetInfoScreen> {
                             isAvatar1 = false;
                           } else {
                             //set profilePic path
-                            profilePicUrl = values.boyProfilePicLink;
+                            profilePicUrl = values.boyNetProfilePicLink;
                             isAvatar1 = true;
                             isAvatar2 = false;
                             isAvatar3 = false;
@@ -163,7 +163,7 @@ class _GetInfoScreenState extends State<GetInfoScreen> {
                         },
                         child: AvatarWidget(
                           avatarImage: CachedNetworkImage(
-                            imageUrl: values.boyProfilePicLink,
+                            imageUrl: values.boyNetProfilePicLink,
                             placeholder: (context, url) => Container(
                               width: 50.0,
                               height: 50.0,
@@ -204,7 +204,7 @@ class _GetInfoScreenState extends State<GetInfoScreen> {
                             isAvatar2 = false;
                           } else {
                             //set profilePic path
-                            profilePicUrl = values.girlProfilePicLink;
+                            profilePicUrl = values.girlNetProfilePicLink;
                             isAvatar1 = false;
                             isAvatar2 = true;
                             isAvatar3 = false;
@@ -215,7 +215,7 @@ class _GetInfoScreenState extends State<GetInfoScreen> {
                         },
                         child: AvatarWidget(
                           avatarImage: CachedNetworkImage(
-                            imageUrl: values.girlProfilePicLink,
+                            imageUrl: values.girlNetProfilePicLink,
                             placeholder: (context, url) => Container(
                               width: 50.0,
                               height: 50.0,
@@ -256,7 +256,7 @@ class _GetInfoScreenState extends State<GetInfoScreen> {
                             isAvatar3 = false;
                           } else {
                             //set profilePic path
-                            profilePicUrl = values.manProfilePicLink;
+                            profilePicUrl = values.manNetProfilePicLink;
                             isAvatar1 = false;
                             isAvatar2 = false;
                             isAvatar3 = true;
@@ -267,7 +267,7 @@ class _GetInfoScreenState extends State<GetInfoScreen> {
                         },
                         child: AvatarWidget(
                           avatarImage: CachedNetworkImage(
-                            imageUrl: values.manProfilePicLink,
+                            imageUrl: values.manNetProfilePicLink,
                             placeholder: (context, url) => Container(
                               width: 50.0,
                               height: 50.0,
@@ -308,7 +308,7 @@ class _GetInfoScreenState extends State<GetInfoScreen> {
                             isAvatar4 = false;
                           } else {
                             //set profilePic path
-                            profilePicUrl = values.womanProfilePicLink;
+                            profilePicUrl = values.womanNetProfilePicLink;
                             isAvatar1 = false;
                             isAvatar2 = false;
                             isAvatar3 = false;
@@ -319,7 +319,7 @@ class _GetInfoScreenState extends State<GetInfoScreen> {
                         },
                         child: AvatarWidget(
                           avatarImage: CachedNetworkImage(
-                            imageUrl: values.womanProfilePicLink,
+                            imageUrl: values.womanNetProfilePicLink,
                             placeholder: (context, url) => Container(
                               width: 50.0,
                               height: 50.0,
@@ -365,7 +365,7 @@ class _GetInfoScreenState extends State<GetInfoScreen> {
                     //when loading don't show btn
                     const Center(
                         child: SpinKitWave(
-                        color: palette.pinkColor,
+                        color: palette.primaryColor,
                         size: 25,
                       ))
                     :
@@ -448,7 +448,14 @@ class _GetInfoScreenState extends State<GetInfoScreen> {
       "userId": phoneNumber,
       "userName": userNameTC.text,
       "email": "",
+      "groupId": "",
       "profilePicUrl": profilePicUrl,
+      "startingPoint": "",
+      "endingPoint": "",
+      "last": {
+        "startingPoint": "",
+        "endingPoint": "",
+      }
     });
 
     //update UI
@@ -457,11 +464,10 @@ class _GetInfoScreenState extends State<GetInfoScreen> {
     });
 
     if (!mounted) return;
-    //redirect to role selection screen
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => const HomeScreen()),
-    );
+    Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => const HomeScreen()),
+        (route) => false);
   }
 
   //func to get img from phone storage
@@ -478,9 +484,9 @@ class _GetInfoScreenState extends State<GetInfoScreen> {
           children: [
             //select from gallery btn
             GestureDetector(
-              child: Column(
+              child: const Column(
                 mainAxisSize: MainAxisSize.min,
-                children: const [
+                children: [
                   Icon(
                     Icons.image,
                     size: 50,
@@ -494,9 +500,9 @@ class _GetInfoScreenState extends State<GetInfoScreen> {
             ),
             //capture live pic from camera btn
             GestureDetector(
-              child: Column(
+              child: const Column(
                 mainAxisSize: MainAxisSize.min,
-                children: const [
+                children: [
                   Icon(
                     Icons.camera_alt,
                     size: 50,
@@ -532,6 +538,6 @@ class _GetInfoScreenState extends State<GetInfoScreen> {
       if (image == null) return;
       final imageTemp = File(image.path);
       setState(() => this.image = imageTemp);
-    } catch (e) {}
+    } catch (_) {}
   }
 }

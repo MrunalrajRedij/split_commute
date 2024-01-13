@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:split_commute/config/decorations.dart' as decoration;
+import 'package:split_commute/config/palette.dart' as palette;
 
 class MessageTile extends StatelessWidget {
   final String message;
@@ -15,20 +17,22 @@ class MessageTile extends StatelessWidget {
           top: 4, bottom: 4, left: sentByMe ? 0 : 24, right: sentByMe ? 24 : 0),
       alignment: sentByMe ? Alignment.centerRight : Alignment.centerLeft,
       child: Container(
-        margin:
-            sentByMe ? EdgeInsets.only(left: 30) : EdgeInsets.only(right: 30),
-        padding: EdgeInsets.only(top: 17, bottom: 17, left: 20, right: 20),
+        margin: sentByMe
+            ? const EdgeInsets.only(left: 30)
+            : const EdgeInsets.only(right: 30),
+        padding:
+            const EdgeInsets.only(top: 10, bottom: 17, left: 20, right: 20),
         decoration: BoxDecoration(
           borderRadius: sentByMe
-              ? BorderRadius.only(
+              ? const BorderRadius.only(
                   topLeft: Radius.circular(23),
                   topRight: Radius.circular(23),
                   bottomLeft: Radius.circular(23))
-              : BorderRadius.only(
+              : const BorderRadius.only(
                   topLeft: Radius.circular(23),
                   topRight: Radius.circular(23),
                   bottomRight: Radius.circular(23)),
-          color: sentByMe ? Colors.blueAccent : Colors.grey[700],
+          color: sentByMe ? Colors.blueGrey : Colors.grey[700],
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -36,14 +40,13 @@ class MessageTile extends StatelessWidget {
             Text(sender.toUpperCase(),
                 textAlign: TextAlign.start,
                 style: TextStyle(
-                    fontSize: 13.0,
-                    fontWeight: FontWeight.bold,
+                    fontSize: 18,
                     color: Colors.black,
-                    letterSpacing: -0.5)),
-            SizedBox(height: 7.0),
+                    fontWeight: FontWeight.bold)),
+            SizedBox(height: 5),
             Text(message,
                 textAlign: TextAlign.start,
-                style: TextStyle(fontSize: 15.0, color: Colors.white)),
+                style: TextStyle(fontSize: 18, color: palette.whiteColor)),
           ],
         ),
       ),
