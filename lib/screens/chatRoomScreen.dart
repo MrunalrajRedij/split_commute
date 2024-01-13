@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:split_commute/utils/utilFunctions.dart';
 import 'package:split_commute/widgets/messageTile.dart';
 
 class ChatRoomScreen extends StatefulWidget {
@@ -72,6 +73,7 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
           .doc(widget.groupId)
           .collection('messages')
           .add(chatMessageMap);
+
       db.collection('groups').doc(widget.groupId).update({
         'recentMessage': chatMessageMap['message'],
         'recentMessageSender': chatMessageMap['sender'],
@@ -92,6 +94,20 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
         centerTitle: true,
         backgroundColor: Colors.black87,
         elevation: 0.0,
+        actions: [
+          ElevatedButton(
+            onPressed: () async {
+              await db.collection("users").doc(widget.userId).update({
+                "grouped": false,
+                "groupId": "",
+                "startingPoint": "",
+                "endingPoint": "",
+              });
+              Navigator.pop(context);
+            },
+            child: Text("Exit ChatRoom"),
+          )
+        ],
       ),
       body: Container(
         child: Stack(
