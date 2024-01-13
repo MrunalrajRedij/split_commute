@@ -1,5 +1,3 @@
-import 'dart:convert';
-import 'package:crypto/crypto.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -188,36 +186,12 @@ class MenuDrawer extends Drawer {
     Razorpay razorpay;
     String showSelectedCredits = "10";
     void _handlePaymentSuccess(PaymentSuccessResponse response) async {
-      String secret = values.api_secret;
-      String message = "${response.orderId}|${response.paymentId}";
-
-      List<int> messageBytes = utf8.encode(message);
-      List<int> key = utf8.encode(secret);
-      Hmac hmac = Hmac(sha256, key);
-      Digest digest = hmac.convert(messageBytes);
-
-      if (digest.toString() == response.signature.toString()) {
-        //show dialog as success
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: const Text("Message"),
-              content: const Text('Payment Successful!'),
-              actions: [
-                TextButton(
-                  onPressed: () => Navigator.pop(context),
-                  child: const Text("OK"),
-                )
-              ],
-            );
-          },
-        );
-      }
+      Navigator.pop(context);
+      UtilFunctions().showScaffoldMsg(context, "Payment Successful!");
     }
 
     void _handlePaymentError(PaymentFailureResponse response) {
-      // Do something when payment fails
+      Navigator.pop(context);
       UtilFunctions()
           .showScaffoldMsg(context, response.message ?? "Error: Try Again!");
     }

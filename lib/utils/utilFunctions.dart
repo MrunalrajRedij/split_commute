@@ -21,16 +21,19 @@ class UtilFunctions {
     );
   }
 
-  void checkIfUserFirstTime(context) {
+  Future checkIfUserFirstTime(context) async {
     final doc = FirebaseFirestore.instance
         .collection("users")
         .doc(FirebaseAuth.instance.currentUser!.phoneNumber)
         .get();
 
-    doc.then((value) {
+    await doc.then((value) {
       if (!value.exists) {
         Navigator.pushNamedAndRemoveUntil(
             context, "/GetInfoScreen", (route) => false);
+        return true;
+      } else {
+        return false;
       }
     });
   }
@@ -43,13 +46,8 @@ class UtilFunctions {
         });
   }
 
-  Future clearSearchingFromDB() {
-    return FirebaseFirestore.instance
-        .collection("users")
-        .doc(FirebaseAuth.instance.currentUser!.phoneNumber)
-        .collection("searching")
-        .doc("searching")
-        .set({
+  Future clearSearchingFromDB(String userId) {
+    return FirebaseFirestore.instance.collection("users").doc(userId).update({
       "startingPoint": "",
       "endingPoint": "",
     });
@@ -57,7 +55,7 @@ class UtilFunctions {
 
   //logout func
   void logOut(context) async {
-    await clearSearchingFromDB();
+    await clearSearchingFromDB(FirebaseAuth.instance.currentUser!.phoneNumber!);
     Navigator.pushNamedAndRemoveUntil(
         context, "/LoginScreen", (route) => false);
     FirebaseAuth.instance.signOut();

@@ -88,7 +88,6 @@ class _OtpAuthScreenState extends State<OtpAuthScreen> {
           setState(() {
             isCheckingOTP = false;
           });
-
           //show message from firebase
           UtilFunctions().showScaffoldMsg(context, verificationFailed.message!);
         },
@@ -108,12 +107,11 @@ class _OtpAuthScreenState extends State<OtpAuthScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: SingleChildScrollView(
-        child: SafeArea(
-          child: Container(
-            padding: const EdgeInsets.only(left: 20, right: 20),
-            child: Padding(
-              padding: const EdgeInsets.only(bottom: 100),
+      body: Center(
+        child: SingleChildScrollView(
+          child: SafeArea(
+            child: Container(
+              padding: const EdgeInsets.only(left: 20, right: 20),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -121,120 +119,121 @@ class _OtpAuthScreenState extends State<OtpAuthScreen> {
                   isCheckingOTP
                       ?
                       //show loading widget, whenever there is loading
-                      Padding(
-                          padding: const EdgeInsets.only(top: 350),
-                          child: const SpinKitWave(
-                            color: palette.primaryColor,
-                            size: 25,
-                          ),
+                      const SpinKitWave(
+                          color: palette.primaryColor,
+                          size: 25,
                         )
-                      : Column(
-                          children: [
-                            Image.asset(
-                              'assets/images/logo.png',
-                              scale: 3,
-                            ),
-                            const SizedBox(height: 20),
-                            Align(
-                              alignment: Alignment.topLeft,
-                              child: Text(
-                                'Enter the OTP sent to  ${widget.phoneNumber}',
-                                style: decoration.tileHeading20TS,
+                      : Padding(
+                          padding: const EdgeInsets.only(bottom: 100),
+                          child: Column(
+                            children: [
+                              Image.asset(
+                                'assets/images/logo.png',
+                                scale: 3,
                               ),
-                            ),
-                            decoration.sizedBoxWithHeight10,
-                            //widget for inputting OTP
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 30),
-                              child: PinCodeTextField(
-                                keyboardType: TextInputType.number,
-                                appContext: context,
-                                length: 6,
-                                pinTheme: PinTheme(
-                                  selectedFillColor: palette.primaryColor,
-                                  activeColor: palette.primaryColor,
-                                  selectedColor: palette.pinkColor,
-                                  inactiveColor: palette.primaryColor,
-                                  fieldWidth: 30.w,
+                              const SizedBox(height: 20),
+                              Align(
+                                alignment: Alignment.topLeft,
+                                child: Text(
+                                  'Enter the OTP sent to  ${widget.phoneNumber}',
+                                  style: decoration.tileHeading20TS,
                                 ),
-                                onChanged: (value) {
-                                  otpCodeString = value;
-                                },
                               ),
-                            ),
-                            decoration.sizedBoxWithHeight5,
-                            SizedBox(
-                              width: double.infinity,
-                              height: 40,
-                              child: ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: palette.primaryColor,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(
-                                      decoration.boxBorderRadius,
+                              decoration.sizedBoxWithHeight10,
+                              //widget for inputting OTP
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 30),
+                                child: PinCodeTextField(
+                                  keyboardType: TextInputType.number,
+                                  appContext: context,
+                                  length: 6,
+                                  pinTheme: PinTheme(
+                                    selectedFillColor: palette.primaryColor,
+                                    activeColor: palette.primaryColor,
+                                    selectedColor: palette.pinkColor,
+                                    inactiveColor: palette.primaryColor,
+                                    fieldWidth: 30.w,
+                                  ),
+                                  onChanged: (value) {
+                                    otpCodeString = value;
+                                  },
+                                ),
+                              ),
+                              decoration.sizedBoxWithHeight5,
+                              SizedBox(
+                                width: double.infinity,
+                                height: 40,
+                                child: ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: palette.primaryColor,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(
+                                        decoration.boxBorderRadius,
+                                      ),
                                     ),
                                   ),
-                                ),
-                                onPressed: () async {
-                                  //otp verification with phoneAuthCredential
-                                  signInWithPhoneAuthCredential();
-                                },
-                                child: Text(
-                                  'VERIFY OTP',
-                                  style: decoration.whiteBold14TS,
-                                ),
-                              ),
-                            ),
-                            const SizedBox(height: 15),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                (_seconds != 0)
-                                    ?
-                                    //show timer
-                                    Text(
-                                        resendTime,
-                                        style: decoration
-                                            .resendAndEditPhoneTextStyle,
-                                      )
-                                    :
-                                    //if timer is completed, show resend btn
-                                    GestureDetector(
-                                        child: Text(
-                                          'Resend OTP',
-                                          style: decoration
-                                              .resendAndEditPhoneTextStyle,
-                                        ),
-                                        onTap: () {
-                                          resendVerificationCode(
-                                            widget.phoneNumber,
-                                            resendToken,
-                                          );
-                                          startTimer();
-                                        },
-                                      ),
-
-                                //edit phone number btn, so that user can go back to login screen to change phone number
-                                GestureDetector(
-                                  onTap: () {
-                                    Navigator.pushReplacement(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            const LoginScreen(),
-                                      ),
-                                    );
+                                  onPressed: () async {
+                                    //otp verification with phoneAuthCredential
+                                    signInWithPhoneAuthCredential();
                                   },
                                   child: Text(
-                                    'Edit Phone number',
-                                    style:
-                                        decoration.resendAndEditPhoneTextStyle,
+                                    'VERIFY OTP',
+                                    style: decoration.whiteBold14TS,
                                   ),
-                                )
-                              ],
-                            ),
-                          ],
+                                ),
+                              ),
+                              const SizedBox(height: 15),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  (_seconds != 0)
+                                      ?
+                                      //show timer
+                                      Text(
+                                          resendTime,
+                                          style: decoration
+                                              .resendAndEditPhoneTextStyle,
+                                        )
+                                      :
+                                      //if timer is completed, show resend btn
+                                      GestureDetector(
+                                          child: Text(
+                                            'Resend OTP',
+                                            style: decoration
+                                                .resendAndEditPhoneTextStyle,
+                                          ),
+                                          onTap: () {
+                                            resendVerificationCode(
+                                              widget.phoneNumber,
+                                              resendToken,
+                                            );
+                                            startTimer();
+                                          },
+                                        ),
+
+                                  //edit phone number btn, so that user can go back to login screen to change phone number
+                                  GestureDetector(
+                                    onTap: () {
+                                      Navigator.pushReplacement(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              const LoginScreen(),
+                                        ),
+                                      );
+                                    },
+                                    child: Text(
+                                      'Edit Phone number',
+                                      style: decoration
+                                          .resendAndEditPhoneTextStyle,
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ],
+                          ),
                         ),
                 ],
               ),
@@ -319,7 +318,8 @@ class _OtpAuthScreenState extends State<OtpAuthScreen> {
           await _auth.signInWithCredential(phoneAuthCredential);
       if (authCredential.user != null) {
         if (!mounted) return;
-        UtilFunctions().checkIfUserFirstTime(context);
+        Navigator.pushNamedAndRemoveUntil(
+            context, "/HomeScreen", (route) => false);
       }
     } catch (error) {
       setState(() {

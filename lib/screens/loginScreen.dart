@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -58,7 +59,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         // labelText: "Enter Phone Number",
                         border: OutlineInputBorder(
                           borderRadius:
-                          BorderRadius.circular(decoration.boxBorderRadius),
+                              BorderRadius.circular(decoration.boxBorderRadius),
                           borderSide: const BorderSide(
                             width: 1,
                           ),
@@ -90,8 +91,8 @@ class _LoginScreenState extends State<LoginScreen> {
                         style: ElevatedButton.styleFrom(
                           backgroundColor: palette.primaryColor,
                           shape: RoundedRectangleBorder(
-                            borderRadius:
-                            BorderRadius.circular(decoration.boxBorderRadius),
+                            borderRadius: BorderRadius.circular(
+                                decoration.boxBorderRadius),
                           ),
                         ),
                         onPressed: () async {
@@ -117,7 +118,8 @@ class _LoginScreenState extends State<LoginScreen> {
                           } else if (phoneNumber.length < minPhoneLength ||
                               phoneNumber.length > maxPhoneLength) {
                             //show dialog if phone number is invalid
-                            showAlertDialog('Please enter a valid Phone Number ');
+                            showAlertDialog(
+                                'Please enter a valid Phone Number ');
                           } else {
                             //if phone is valid and everything check out,then pass phone num to otpScreen
                             Navigator.pushReplacement(
@@ -157,18 +159,21 @@ class _LoginScreenState extends State<LoginScreen> {
                                   style: decoration.blueBold15TS,
                                   recognizer: TapGestureRecognizer()
                                     ..onTap = () {
-                                      UtilFunctions().privacyPolicyWidget(context);
+                                      UtilFunctions()
+                                          .privacyPolicyWidget(context);
                                     },
                                 ),
                                 TextSpan(
-                                    text: "and acknowledge that I have read the ",
+                                    text:
+                                        "and acknowledge that I have read the ",
                                     style: decoration.tileHeading14TS),
                                 TextSpan(
                                   text: "Privacy Policy",
                                   style: decoration.blueBold15TS,
                                   recognizer: TapGestureRecognizer()
                                     ..onTap = () {
-                                      UtilFunctions().privacyPolicyWidget(context);
+                                      UtilFunctions()
+                                          .privacyPolicyWidget(context);
                                     },
                                 ),
                                 TextSpan(
