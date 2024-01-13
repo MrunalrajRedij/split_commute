@@ -30,14 +30,14 @@ class _SearchCompanionScreenState extends State<SearchCompanionScreen>
   bool hidden = true;
   // List<UserModel> userModels = [];
   List<UserModel> selectedUsers = [];
-  int joinedUsers = 0;
+  int joinedUsers = 1;
   String groupId = "";
   bool grouped = false;
 
   @override
   void initState() {
     super.initState();
-    Future.delayed(Duration(seconds: 2)).then((value) {
+    Future.delayed(Duration(seconds: 1)).then((value) {
       setState(() {
         hidden = false;
       });
@@ -63,6 +63,16 @@ class _SearchCompanionScreenState extends State<SearchCompanionScreen>
       },
     );
     searchForRoomOrCreateOne();
+  }
+
+  void exp() async {
+    while (true) {
+      await db.collection("groups").doc(groupId).get().then((value) {
+        setState(() {
+          joinedUsers = value['count'];
+        });
+      });
+    }
   }
 
   void searchForRoomOrCreateOne() async {
@@ -117,6 +127,7 @@ class _SearchCompanionScreenState extends State<SearchCompanionScreen>
         }
       });
       i++;
+      exp();
     }
   }
 
@@ -246,61 +257,63 @@ class _SearchCompanionScreenState extends State<SearchCompanionScreen>
                   hideBool: hidden,
                 ),
               ),
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 60, vertical: 40),
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                        backgroundColor: palette.greenColor,
-                        foregroundColor: palette.whiteColor,
-                        elevation: 10,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(
-                          30,
-                        ))),
-                    onPressed: () async {
-                      // grouped = true;
-                      // for (int i = 0; i < selectedUsers.length; i++) {
-                      //   if (i == 0) {
-                      //     await db
-                      //         .collection("users")
-                      //         .doc(selectedUsers[0].userId)
-                      //         .update({
-                      //       "grouped": true,
-                      //       "groupId": selectedUsers[0].userId
-                      //     });
-                      //     groupId = selectedUsers[0].userId;
-                      //   } else {
-                      //     await db
-                      //         .collection("users")
-                      //         .doc(selectedUsers[i].userId)
-                      //         .update({
-                      //       "grouped": true,
-                      //       "groupId": selectedUsers[0].userId
-                      //     });
-                      //     groupId = selectedUsers[i].userId;
-                      //   }
-                      // }
+              (joinedUsers > 1)
+                  ? Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 60, vertical: 40),
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                              backgroundColor: palette.greenColor,
+                              foregroundColor: palette.whiteColor,
+                              elevation: 10,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(
+                                30,
+                              ))),
+                          onPressed: () async {
+                            // grouped = true;
+                            // for (int i = 0; i < selectedUsers.length; i++) {
+                            //   if (i == 0) {
+                            //     await db
+                            //         .collection("users")
+                            //         .doc(selectedUsers[0].userId)
+                            //         .update({
+                            //       "grouped": true,
+                            //       "groupId": selectedUsers[0].userId
+                            //     });
+                            //     groupId = selectedUsers[0].userId;
+                            //   } else {
+                            //     await db
+                            //         .collection("users")
+                            //         .doc(selectedUsers[i].userId)
+                            //         .update({
+                            //       "grouped": true,
+                            //       "groupId": selectedUsers[0].userId
+                            //     });
+                            //     groupId = selectedUsers[i].userId;
+                            //   }
+                            // }
 
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => ChatRoomScreen(
-                            userId: user!.phoneNumber!,
-                            groupId: groupId,
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ChatRoomScreen(
+                                  userId: user!.phoneNumber!,
+                                  groupId: groupId,
+                                ),
+                              ),
+                            );
+                          },
+                          child: Text(
+                            'Proceed',
+                            style: decoration.whiteBold16TS,
                           ),
                         ),
-                      );
-                    },
-                    child: Text(
-                      'Proceed',
-                      style: decoration.whiteBold16TS,
-                    ),
-                  ),
-                ),
-              )
+                      ),
+                    )
+                  : Container()
             ],
           ),
         ),

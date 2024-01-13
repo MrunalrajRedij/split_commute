@@ -85,7 +85,11 @@ class MenuDrawer extends Drawer {
                     'Support/Help',
                     style: decoration.lightBlackHeading12TS,
                   ),
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.pop(context);
+                    UtilFunctions()
+                        .showScaffoldMsg(context, "Soon to be added!!!");
+                  },
                 ),
 
                 //logout btn

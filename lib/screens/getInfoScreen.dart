@@ -447,6 +447,7 @@ class _GetInfoScreenState extends State<GetInfoScreen> {
     FirebaseFirestore.instance.collection("users").doc(phoneNumber).set({
       "userId": phoneNumber,
       "userName": userNameTC.text,
+      "email": "",
       "profilePicUrl": profilePicUrl,
     });
 
