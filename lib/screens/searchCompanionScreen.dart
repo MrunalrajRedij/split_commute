@@ -121,6 +121,7 @@ class _SearchCompanionScreenState extends State<SearchCompanionScreen>
                   setState(() {
                     loading = false;
                   });
+                  sendCloseMessage();
                   Future.delayed(const Duration(milliseconds: 2000))
                       .then((value) {
                     routeToChatScreen();
@@ -149,6 +150,7 @@ class _SearchCompanionScreenState extends State<SearchCompanionScreen>
           setState(() {
             loading = false;
           });
+          sendCloseMessage();
           Future.delayed(const Duration(milliseconds: 2000)).then((value) {
             routeToChatScreen();
           });
@@ -159,6 +161,27 @@ class _SearchCompanionScreenState extends State<SearchCompanionScreen>
       print("//////" + groupId);
       exp();
     }
+  }
+
+  sendCloseMessage() {
+    Map<String, dynamic> chatMessageMap = {
+      "message": "$userName has joined",
+      "sender": userName,
+      'time': DateTime.now().millisecondsSinceEpoch,
+      'hasLeft': true,
+      'hasJoined': true,
+    };
+    db
+        .collection('groups')
+        .doc(groupId)
+        .collection('messages')
+        .add(chatMessageMap);
+
+    db.collection('groups').doc(groupId).update({
+      'recentMessage': chatMessageMap['message'],
+      'recentMessageSender': chatMessageMap['sender'],
+      'recentMessageTime': chatMessageMap['time'].toString(),
+    });
   }
 
   void routeToChatScreen() {

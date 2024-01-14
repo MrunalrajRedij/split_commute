@@ -92,7 +92,7 @@ class _HomeScreenState extends State<HomeScreen> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              SizedBox(height: 5),
+              const SizedBox(height: 5),
               Padding(
                 padding: const EdgeInsets.symmetric(
                     horizontal: 15.0, vertical: 10.0),
@@ -295,6 +295,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                 !endingPoints.contains(endingPointTC.text)) {
                               UtilFunctions().showScaffoldMsg(context,
                                   "Enter valid Starting and Ending point !!!");
+                            } else if (endingPointTC.text
+                                .contains(startingPointTC.text.split(" ")[0])) {
+                              UtilFunctions().showScaffoldMsg(context,
+                                  "Points cannot be close to each other !!!");
                             } else {
                               Navigator.push(
                                 context,
@@ -477,7 +481,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       ),
                                     ),
                                   ),
-                                  SizedBox(height: 5),
+                                  const SizedBox(height: 5),
                                 ],
                               ),
                       ),

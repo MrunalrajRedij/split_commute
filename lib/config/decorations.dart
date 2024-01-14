@@ -69,6 +69,10 @@ TextStyle lightBlackHeading16TS = TextStyle(
     fontWeight: FontWeight.bold,
     fontSize: 16.sp,
     color: palette.lightBlackColor);
+TextStyle lightBlackHeading18TS = TextStyle(
+    fontWeight: FontWeight.bold,
+    fontSize: 18.sp,
+    color: palette.lightBlackColor);
 TextStyle lightBlackHeading25TS = TextStyle(
     fontWeight: FontWeight.bold,
     fontSize: 25.sp,

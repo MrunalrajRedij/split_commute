@@ -61,11 +61,34 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
                     sender: snapshot.data?.docs[index]["sender"],
                     sentByMe:
                         widget.userName == snapshot.data?.docs[index]["sender"],
+                    hasLeft: snapshot.data?.docs[index]["hasLeft"],
+                    hasJoined: snapshot.data?.docs[index]["hasJoined"],
                   );
                 })
             : Container();
       },
     );
+  }
+
+  sendCloseMessage() {
+    Map<String, dynamic> chatMessageMap = {
+      "message": "${widget.userName} has left",
+      "sender": widget.userName,
+      'time': DateTime.now().millisecondsSinceEpoch,
+      'hasLeft': true,
+      'hasJoined': false,
+    };
+    db
+        .collection('groups')
+        .doc(widget.groupId)
+        .collection('messages')
+        .add(chatMessageMap);
+
+    db.collection('groups').doc(widget.groupId).update({
+      'recentMessage': chatMessageMap['message'],
+      'recentMessageSender': chatMessageMap['sender'],
+      'recentMessageTime': chatMessageMap['time'].toString(),
+    });
   }
 
   sendMessage() {
@@ -74,8 +97,9 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
         "message": messageEditingController.text,
         "sender": widget.userName,
         'time': DateTime.now().millisecondsSinceEpoch,
+        'hasLeft': false,
+        'hasJoined': false,
       };
-
       db
           .collection('groups')
           .doc(widget.groupId)
@@ -110,24 +134,34 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
           foregroundColor: palette.whiteColor,
           elevation: 0.0,
           actions: [
-            ElevatedButton(
-              onPressed: () async {
-                //await
-                db.collection("users").doc(widget.userId).update({
-                  "grouped": false,
-                  "groupId": "",
-                  "startingPoint": "",
-                  "endingPoint": "",
-                  "last": {
-                    "startingPoint": widget.startingPoint,
-                    "endingPoint": widget.endingPoint,
-                  }
-                });
-                if (!mounted) return;
-                Navigator.pushNamedAndRemoveUntil(
-                    context, "/HomeScreen", (route) => false);
-              },
-              child: const Text("Exit"),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10.0),
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: palette.redColor,
+                ),
+                onPressed: () async {
+                  sendCloseMessage();
+                  //await
+                  db.collection("users").doc(widget.userId).update({
+                    "grouped": false,
+                    "groupId": "",
+                    "startingPoint": "",
+                    "endingPoint": "",
+                    "last": {
+                      "startingPoint": widget.startingPoint,
+                      "endingPoint": widget.endingPoint,
+                    }
+                  });
+                  if (!mounted) return;
+                  Navigator.pushNamedAndRemoveUntil(
+                      context, "/HomeScreen", (route) => false);
+                },
+                child: Text(
+                  "Exit",
+                  style: decoration.whiteBold16TS,
+                ),
+              ),
             )
           ],
         ),
@@ -214,7 +248,8 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
                                       children: [
                                         Text(
                                           "Ola : ",
-                                          style: decoration.blueGreyBold18TS,
+                                          style:
+                                              decoration.lightBlackHeading18TS,
                                         ),
                                         Flexible(
                                           child: Text(
@@ -231,7 +266,8 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
                                       children: [
                                         Text(
                                           "Uber : ",
-                                          style: decoration.blueGreyBold18TS,
+                                          style:
+                                              decoration.lightBlackHeading18TS,
                                         ),
                                         Flexible(
                                           child: Text(
@@ -248,7 +284,8 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
                                       children: [
                                         Text(
                                           "Rapido: ",
-                                          style: decoration.blueGreyBold18TS,
+                                          style:
+                                              decoration.lightBlackHeading18TS,
                                         ),
                                         Flexible(
                                           child: Text(
@@ -265,7 +302,8 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
                                       children: [
                                         Text(
                                           "Taxi : ",
-                                          style: decoration.blueGreyBold18TS,
+                                          style:
+                                              decoration.lightBlackHeading18TS,
                                         ),
                                         Flexible(
                                           child: Text(
