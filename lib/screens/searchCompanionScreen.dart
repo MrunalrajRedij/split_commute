@@ -98,36 +98,36 @@ class _SearchCompanionScreenState extends State<SearchCompanionScreen>
                   .doc(user!.phoneNumber)
                   .get()
                   .then((value1) async {
-                if (value1["groupId"] == tempGroupId) {
-                } else {
-                  String temp = "";
-                  await db
-                      .collection("users")
-                      .doc(user!.phoneNumber)
-                      .get()
-                      .then((value) {
-                    temp = value["groupId"];
-                  });
-                  if (temp == tempGroupId) {}
-                  await db.collection("users").doc(user!.phoneNumber).update({
-                    "groupId": tempGroupId,
-                  });
-                  groupId = tempGroupId;
-                  tempCount++;
-                  await db
-                      .collection('groups')
-                      .doc(tempGroupId)
-                      .set({"count": tempCount});
-                  setState(() {
-                    loading = false;
-                  });
-                  sendCloseMessage();
-                  Future.delayed(const Duration(milliseconds: 2000))
-                      .then((value) {
-                    routeToChatScreen();
-                  });
-                  return;
-                }
+                // if (value1["lastGroupId"] == tempGroupId) {
+                //   //
+                // } else {
+                //
+                // }
+
+                String temp = "";
+                temp = value1["groupId"];
+
+                if (temp == tempGroupId) {}
+                await db.collection("users").doc(user!.phoneNumber).update({
+                  "groupId": tempGroupId,
+                });
+                groupId = tempGroupId;
+                tempCount++;
+                await db
+                    .collection('groups')
+                    .doc(tempGroupId)
+                    .set({"count": tempCount});
+                setState(() {
+                  loading = false;
+                });
+                sendCloseMessage();
+                Future.delayed(const Duration(milliseconds: 2000))
+                    .then((value) {
+                  routeToChatScreen();
+                });
+                return;
+
+
               });
             }
           });
@@ -162,6 +162,91 @@ class _SearchCompanionScreenState extends State<SearchCompanionScreen>
       exp();
     }
   }
+
+  // void searchForRoomOrCreateOne() async {
+  //   int i = 0;
+  //   int tempCount = 0;
+  //   roomId = Random().nextInt(10000);
+  //   while (groupId == "") {
+  //     String tempGroupId = "${widget.startingPoint}-${widget.endingPoint}-$i";
+  //     await db.collection("groups").doc(tempGroupId).get().then((value) async {
+  //       if (value.exists) {
+  //         await db
+  //             .collection("groups")
+  //             .doc(tempGroupId)
+  //             .get()
+  //             .then((value) async {
+  //           tempCount = value['count'];
+  //           if (tempCount < 2) {
+  //             await db
+  //                 .collection("users")
+  //                 .doc(user!.phoneNumber)
+  //                 .get()
+  //                 .then((value1) async {
+  //               if (value1["groupId"] == tempGroupId) {
+  //               } else {
+  //                 String temp = "";
+  //                 await db
+  //                     .collection("users")
+  //                     .doc(user!.phoneNumber)
+  //                     .get()
+  //                     .then((value) {
+  //                   temp = value["groupId"];
+  //                 });
+  //                 if (temp == tempGroupId) {}
+  //                 await db.collection("users").doc(user!.phoneNumber).update({
+  //                   "groupId": tempGroupId,
+  //                 });
+  //                 groupId = tempGroupId;
+  //                 tempCount++;
+  //                 await db
+  //                     .collection('groups')
+  //                     .doc(tempGroupId)
+  //                     .set({"count": tempCount});
+  //                 setState(() {
+  //                   loading = false;
+  //                 });
+  //                 sendCloseMessage();
+  //                 Future.delayed(const Duration(milliseconds: 2000))
+  //                     .then((value) {
+  //                   routeToChatScreen();
+  //                 });
+  //                 return;
+  //               }
+  //             });
+  //           }
+  //         });
+  //       } else {
+  //         await db.collection('groups').doc(tempGroupId).set({"count": 1});
+  //         await db
+  //             .collection('groups')
+  //             .doc(tempGroupId)
+  //             .collection('messages')
+  //             .doc()
+  //             .set({
+  //           'recentMessage': "",
+  //           'recentMessageSender': "",
+  //           'recentMessageTime': "",
+  //         });
+  //         await db.collection("users").doc(user!.phoneNumber).update({
+  //           "groupId": tempGroupId,
+  //         });
+  //         groupId = tempGroupId;
+  //         setState(() {
+  //           loading = false;
+  //         });
+  //         sendCloseMessage();
+  //         Future.delayed(const Duration(milliseconds: 2000)).then((value) {
+  //           routeToChatScreen();
+  //         });
+  //         return;
+  //       }
+  //     });
+  //     i++;
+  //     print("//////" + groupId);
+  //     exp();
+  //   }
+  // }
 
   sendCloseMessage() {
     Map<String, dynamic> chatMessageMap = {

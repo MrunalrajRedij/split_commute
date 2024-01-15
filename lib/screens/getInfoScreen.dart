@@ -449,6 +449,7 @@ class _GetInfoScreenState extends State<GetInfoScreen> {
       "userName": userNameTC.text,
       "email": "",
       "groupId": "",
+      "lastGroupId": "",
       "profilePicUrl": profilePicUrl,
       "startingPoint": "",
       "endingPoint": "",

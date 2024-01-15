@@ -141,6 +141,18 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
                   backgroundColor: palette.redColor,
                 ),
                 onPressed: () async {
+                  await db
+                      .collection("groups")
+                      .doc(widget.groupId)
+                      .get()
+                      .then((value) async {
+                    if (value['count'] == 1) {
+                      await db
+                          .collection('groups')
+                          .doc(widget.groupId)
+                          .set({"count": 10});
+                    }
+                  });
                   sendCloseMessage();
                   //await
                   db.collection("users").doc(widget.userId).update({
@@ -148,6 +160,7 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
                     "groupId": "",
                     "startingPoint": "",
                     "endingPoint": "",
+                    "lastGroupId": widget.groupId,
                     "last": {
                       "startingPoint": widget.startingPoint,
                       "endingPoint": widget.endingPoint,
