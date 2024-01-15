@@ -8,5 +8,5 @@ const String girlNetProfilePicLink = "https://firebasestorage.googleapis.com/v0/
 const String manNetProfilePicLink = "https://firebasestorage.googleapis.com/v0/b/splitcommute.appspot.com/o/profilePics%2Fman.png?alt=media&token=1d01818a-d7a3-43ec-bfca-2cdac546b0eag";
 const String womanNetProfilePicLink = "https://firebasestorage.googleapis.com/v0/b/splitcommute.appspot.com/o/profilePics%2Fwoman.png?alt=media&token=6c35befc-5634-4b89-8cd2-d6d5058a4983";
 
-const String api_key = "rzp_test_sj2H4ujnY45Vv1";
-const String api_secret = "jYDIRmkDxK53f1huI90kBtZm";
+const String api_key = "";
+const String api_secret = "";
